@@ -1,0 +1,6 @@
+<!-- Money Out Icon -->
+<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 25 25">
+  <g fill="none" fill-rule="evenodd">
+    <path fill="#F44336" d="M18,2H6A2,2,0,0,0,4,4V20a2,2,0,0,0,2,2H18a2,2,0,0,0,2-2V4A2,2,0,0,0,18,2ZM16,13a1,1,0,0,0-2,0v2a1,1,0,0,0,2,0V13Zm4-6a1,1,0,0,0-1-1H5A1,1,0,0,0,4,7V8H20V7A1,1,0,0,0,20,7Z"/>
+  </g>
+</svg>

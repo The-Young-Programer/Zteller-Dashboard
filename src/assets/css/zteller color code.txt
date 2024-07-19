@@ -1,0 +1,72 @@
+######################################
+
+    Zteller Color Code
+
+     style={{
+        backgroundColor: '#41aa5e', // Custom green color
+        transition: 'background-color 0.3s ease',
+      }}
+      onMouseEnter={(e) => e.target.style.backgroundColor = '#16a34a'} // Darker green on hover
+      onMouseLeave={(e) => e.target.style.backgroundColor = '#41aa5e'} // Original green
+
+
+
+
+    Dark green:  
+
+        
+        rgba(22, 163, 74, 1) #16a34a (darker)
+        
+        rgba(65, 170, 94,1) #41aa5e (dark)
+
+
+
+    Light-green:
+
+        rgba(49,196,141) #31c48d (light) green-400
+
+         rgba(188,240,218) #bcf0da (lighter)
+
+
+
+Sure! Here are the hex color codes and RGBA color codes for the green shades in Tailwind CSS:
+
+### Green-50
+- **Hex:** `#ECFDF5`
+- **RGBA:** `rgba(236, 253, 245, 1)`
+
+### Green-100
+- **Hex:** `#D1FAE5`
+- **RGBA:** `rgba(209, 250, 229, 1)`
+
+### Green-200
+- **Hex:** `#A7F3D0`
+- **RGBA:** `rgba(167, 243, 208, 1)`
+
+### Green-300
+- **Hex:** `#6EE7B7`
+- **RGBA:** `rgba(110, 231, 183, 1)`
+
+### Green-400
+- **Hex:** `#34D399`
+- **RGBA:** `rgba(52, 211, 153, 1)`
+
+### Green-500
+- **Hex:** `#10B981`
+- **RGBA:** `rgba(16, 185, 129, 1)`
+
+### Green-600
+- **Hex:** `#059669`
+- **RGBA:** `rgba(5, 150, 105, 1)`
+
+### Green-700
+- **Hex:** `#047857`
+- **RGBA:** `rgba(4, 120, 87, 1)`
+
+### Green-800
+- **Hex:** `#065F46`
+- **RGBA:** `rgba(6, 95, 70, 1)`
+
+### Green-900
+- **Hex:** `#064E3B`
+- **RGBA:** `rgba(6, 78, 59, 1)`
