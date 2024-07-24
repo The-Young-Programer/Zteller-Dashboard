@@ -42,7 +42,10 @@ const ContactForm = () => {
   const [isLoading, setLoading] = useState(false);
   const [isSuccess, setSuccess] = useState(false);
   const [formData, setFormData] = useState({
-    name: ''
+    name: '',
+    number: '',
+    email: '',
+    address: ''
   });
 
   useEffect(() => {
@@ -80,9 +83,7 @@ const ContactForm = () => {
           <div className="text-black text-2xl">Saving ...</div>
         </div>
       )}
-    
-        
-        <h2 className="text-2xl font-bold mb-6">Contact Information</h2>
+      <h2 className="text-2xl font-bold mb-6">Contact Information</h2>
       <div className={`space-y-6 ${isLoading ? 'opacity-50' : ''}`}>
         <input type="text" name="name" placeholder="Full Name" value={formData.name} onChange={handleChange} className="w-full p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400" />
         <input type="number" name="number" placeholder="Phone Number" value={formData.number} onChange={handleChange} className="w-full p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400" />
@@ -106,6 +107,7 @@ const ExcoForm = () => {
   const [isSuccess, setSuccess] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
+    association: '',
     school: '',
     position: '',
     year: '',
@@ -150,12 +152,28 @@ const ExcoForm = () => {
       )}
       <h2 className="text-2xl font-bold mb-6">Exco Information</h2>
       <div className={`space-y-6 ${isLoading ? 'opacity-50' : ''}`}>
+      <input 
+          type="text" 
+          name="association" 
+          placeholder="Association" 
+          value={formData.association} 
+          onChange={handleChange} 
+          className="w-full p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400" 
+        />
         <select name="school" value={formData.school} onChange={handleChange} className="w-full p-4 border bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400">
           <option value="" disabled>Select School</option>
           <option>Uniben</option>
           <option disabled>Unilag</option>
           <option disabled>UniAbuja</option>
         </select>
+        <input 
+          type="text" 
+          name="association" 
+          placeholder="Association" 
+          value={formData.association} 
+          onChange={handleChange} 
+          className="w-full p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400" 
+        />
         <select name="faculty" value={formData.faculty} onChange={handleChange} className="w-full p-4 border bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400">
           <option value="" disabled>Select Faculty</option>
           <option>Physical Science</option>
@@ -196,13 +214,7 @@ const ExcoForm = () => {
           </div>
         )}
       </div>
-      <div>
-      <br></br>
-      <h3 className="text-xl font-semibold mb-4">Invite Other Exco</h3>
-      <p className="text-gray-500 mb-8">COMING SOON</p>
-      </div>
     </div>
-    
   );
 };
 
@@ -210,7 +222,9 @@ const AccountForm = () => {
   const [isLoading, setLoading] = useState(false);
   const [isSuccess, setSuccess] = useState(false);
   const [formData, setFormData] = useState({
-    
+    bankName: '',
+    accountName: '',
+    accountNumber: ''
   });
 
   useEffect(() => {
@@ -250,9 +264,9 @@ const AccountForm = () => {
       )}
       <h2 className="text-2xl font-bold mb-6">Account Information</h2>
       <div className={`space-y-6 ${isLoading ? 'opacity-50' : ''}`}>
-        <input type="text" name="bank" placeholder="Bank Name" value={formData.bank} onChange={handleChange} className="w-full p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400" />
-        <input type="text" name="account" placeholder="Account Number" value={formData.account} onChange={handleChange} className="w-full p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400" />
-        <input type="text" name="accname" placeholder="Account Name" value={formData.accname} onChange={handleChange} className="w-full p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400" />
+        <input type="text" name="bankName" placeholder="Bank Name" value={formData.bankName} onChange={handleChange} className="w-full p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400" />
+        <input type="text" name="accountName" placeholder="Account Name" value={formData.accountName} onChange={handleChange} className="w-full p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400" />
+        <input type="number" name="accountNumber" placeholder="Account Number" value={formData.accountNumber} onChange={handleChange} className="w-full p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400" />
         <button onClick={handleSave} className="w-full mt-8 px-4 py-4 bg-green-400 text-white rounded-lg hover:bg-green-500 transition duration-200" disabled={isLoading}>
           Save
         </button>

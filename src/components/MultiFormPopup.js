@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 const MultiForm = ({ onClose }) => {
   const [activeForm, setActiveForm] = useState('contact');
   const [showCompletionPopup, setShowCompletionPopup] = useState(false);
-  const [isModalVisible, setIsModalVisible] = useState(true); // State to control the modal visibility
+  const [isModalVisible, setIsModalVisible] = useState(true);
 
   const handleNextForm = (nextForm) => {
     setActiveForm(nextForm);
@@ -13,16 +13,16 @@ const MultiForm = ({ onClose }) => {
     setShowCompletionPopup(true);
     setTimeout(() => {
       setShowCompletionPopup(false);
-      onClose(); // Close the MultiForm and the parent GetStartedPopup
+      onClose();
     }, 3000);
   };
 
   const handleClosePopup = () => {
     setShowCompletionPopup(false);
-    setIsModalVisible(false); // Close the modal when OK is clicked
+    setIsModalVisible(false);
   };
 
-  if (!isModalVisible) return null; // If the modal is not visible, return null
+  if (!isModalVisible) return null;
 
   return (
     <div className="flex-1 bg-white shadow-lg rounded-lg p-8 m-4">
@@ -142,11 +142,12 @@ const ContactForm = ({ onNext }) => {
   );
 };
 
-const ExcoForm = ({ onNext }) => {
+const ExcoForm = () => {
   const [isLoading, setLoading] = useState(false);
   const [isSuccess, setSuccess] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
+    association: '',
     school: '',
     position: '',
     year: '',
@@ -175,11 +176,11 @@ const ExcoForm = ({ onNext }) => {
       setLoading(false);
       setSuccess(true);
       localStorage.setItem('formData', JSON.stringify(formData));
+      localStorage.setItem('profileData', JSON.stringify(formData));
       setTimeout(() => {
         setSuccess(false);
-        onNext();
-      }, 1000);
-    }, 1000);
+      }, 3000);
+    }, 3000);
   };
 
   return (
@@ -191,16 +192,25 @@ const ExcoForm = ({ onNext }) => {
       )}
       <h2 className="text-2xl font-bold mb-6">Exco Information</h2>
       <div className={`space-y-6 ${isLoading ? 'opacity-50' : ''}`}>
+      <input 
+          type="text" 
+          name="association" 
+          placeholder="Association" 
+          value={formData.association} 
+          onChange={handleChange} 
+          className="w-full p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400" 
+        />
         <select name="school" value={formData.school} onChange={handleChange} className="w-full p-4 border bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400">
           <option value="" disabled>Select School</option>
           <option>Uniben</option>
           <option disabled>Unilag</option>
-          <option disabled>Oau</option>
-          <option disabled>Unizik</option>
+          <option disabled>UniAbuja</option>
         </select>
+      
         <select name="faculty" value={formData.faculty} onChange={handleChange} className="w-full p-4 border bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400">
           <option value="" disabled>Select Faculty</option>
           <option>Physical Science</option>
+          <option disabled>Management Science</option>
           <option disabled>Life Science</option>
         </select>
         <select name="department" value={formData.department} onChange={handleChange} className="w-full p-4 border bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400">
@@ -237,26 +247,20 @@ const ExcoForm = ({ onNext }) => {
           </div>
         )}
       </div>
-      <div>
-        <br></br>
-        <h3 className="text-xl font-semibold mb-4">Invite Other Exco</h3>
-        <p className="text-gray-500 mb-8">COMING SOON</p>
-      </div>
     </div>
   );
 };
-
 const AccountForm = ({ onComplete }) => {
   const [isLoading, setLoading] = useState(false);
   const [isSuccess, setSuccess] = useState(false);
   const [formData, setFormData] = useState({
-    bank: '',
-    account: '',
-    accname: ''
+    accountName: '',
+    accountNumber: '',
+    bankName: ''
   });
 
   useEffect(() => {
-    const savedData = JSON.parse(localStorage.getItem('formData'));
+    const savedData = JSON.parse(localStorage.getItem('accountData'));
     if (savedData) {
       setFormData(savedData);
     }
@@ -275,7 +279,7 @@ const AccountForm = ({ onComplete }) => {
     setTimeout(() => {
       setLoading(false);
       setSuccess(true);
-      localStorage.setItem('formData', JSON.stringify(formData));
+      localStorage.setItem('accountData', JSON.stringify(formData));
       setTimeout(() => {
         setSuccess(false);
         onComplete();
@@ -292,9 +296,9 @@ const AccountForm = ({ onComplete }) => {
       )}
       <h2 className="text-2xl font-bold mb-6">Account Information</h2>
       <div className={`space-y-6 ${isLoading ? 'opacity-50' : ''}`}>
-        <input type="text" name="bank" placeholder="Bank Name" value={formData.bank} onChange={handleChange} className="w-full p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400" />
-        <input type="text" name="account" placeholder="Account Number" value={formData.account} onChange={handleChange} className="w-full p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400" />
-        <input type="text" name="accname" placeholder="Account Name" value={formData.accname} onChange={handleChange} className="w-full p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400" />
+        <input type="text" name="accountName" placeholder="Account Name" value={formData.accountName} onChange={handleChange} className="w-full p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400" />
+        <input type="number" name="accountNumber" placeholder="Account Number" value={formData.accountNumber} onChange={handleChange} className="w-full p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400" />
+        <input type="text" name="bankName" placeholder="Bank Name" value={formData.bankName} onChange={handleChange} className="w-full p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400" />
         <button onClick={handleSave} className="w-full mt-8 px-4 py-4 bg-green-400 text-white rounded-lg hover:bg-green-500 transition duration-200" disabled={isLoading}>
           Save
         </button>
