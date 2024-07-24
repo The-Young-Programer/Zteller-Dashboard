@@ -1,22 +1,32 @@
-// src/components/GetStartedPopup.js
+
 
 import React, { useEffect, useState } from 'react';
 import { Modal, ModalFooter } from '@windmill/react-ui';
 import ztellerImage from '../assets/img/zteller.png';
 import MultiForm from './MultiFormPopup'; // Import your MultiForm component
 
-const GetStartedPopup = ({ onClose }) => {
+const GetStartedPopup = ({ onComplete }) => {
   const [isOpen, setIsOpen] = useState(true);
   const [showMultiForm, setShowMultiForm] = useState(false);
+  const [currentStage, setCurrentStage] = useState(1);
+  const totalStages = 3; // Assume you have 3 stages in your MultiForm
 
   const handleClick = () => {
     setShowMultiForm(true);
   };
 
+  const handleStageCompletion = () => {
+    if (currentStage < totalStages) {
+      setCurrentStage(currentStage + 1);
+    } else {
+      handleCloseMultiForm();
+    }
+  };
+
   const handleCloseMultiForm = () => {
     setShowMultiForm(false);
     setIsOpen(false);
-    onClose(); // Notify the dashboard that the modal is closed
+    onComplete(); // Notify the dashboard that the modal is closed
   };
 
   useEffect(() => {
@@ -55,10 +65,14 @@ const GetStartedPopup = ({ onClose }) => {
           </ModalFooter>
         </div>
       </Modal>
-      
+
       {showMultiForm && (
-        <Modal isOpen={showMultiForm} onClose={handleCloseMultiForm}>
-          <MultiForm onClose={handleCloseMultiForm} />
+        <Modal isOpen={showMultiForm} onClose={() => {}}>
+          <MultiForm
+            currentStage={currentStage}
+            onStageComplete={handleStageCompletion}
+            onClose={handleCloseMultiForm}
+          />
         </Modal>
       )}
     </>
