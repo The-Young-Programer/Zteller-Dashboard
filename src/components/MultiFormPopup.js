@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import './excoform.css'
 
 const MultiForm = ({ onClose }) => {
   const [activeForm, setActiveForm] = useState('contact');
@@ -27,7 +28,7 @@ const MultiForm = ({ onClose }) => {
   return (
     <div className="flex-1 bg-white shadow-lg rounded-lg p-8 m-4">
       <div className="flex justify-around mb-8">
-        <button
+        <button id='but'
           onClick={() => setActiveForm('contact')}
           className={`px-6 py-2 rounded-full text-lg font-semibold ${
             activeForm === 'contact' ? 'bg-green-400 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
@@ -35,7 +36,7 @@ const MultiForm = ({ onClose }) => {
         >
           Contact
         </button>
-        <button
+        <button id='but'
           onClick={() => setActiveForm('exco')}
           className={`px-6 py-2 rounded-full text-lg font-semibold ${
             activeForm === 'exco' ? 'bg-green-400 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
@@ -43,7 +44,7 @@ const MultiForm = ({ onClose }) => {
         >
           Exco
         </button>
-        <button
+        <button id='but'
           onClick={() => setActiveForm('account')}
           className={`px-6 py-2 rounded-full text-lg font-semibold ${
             activeForm === 'account' ? 'bg-green-400 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
@@ -184,14 +185,14 @@ const ExcoForm = ({ onNext }) => {
   };
 
   return (
-    <div className="relative">
+    <div id='exco' className="relative">
       {isLoading && (
         <div className="absolute inset-0 bg-gray-200 bg-opacity-50 flex items-center justify-center z-10">
           <div className="text-black text-2xl">Saving ...</div>
         </div>
       )}
       <h2 className="text-2xl font-bold mb-6">Exco Information</h2>
-      <div className={`space-y-6 ${isLoading ? 'opacity-50' : ''}`}>
+      <div style={{'@media (max-width: 768px)': {color:'blue'}}} className={`space-y-6 ${isLoading ? 'opacity-50' : ''}`}>
       <input 
           type="text" 
           name="association" 
