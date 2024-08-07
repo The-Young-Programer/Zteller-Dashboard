@@ -1,0 +1,18 @@
+#exco{
+    height: 600px;
+        overflow-y: scroll;
+}
+
+@media(max-width: 780px) {
+    #exco{
+        height: 450px;
+        overflow-y: scroll;
+        }
+
+        #but{
+            
+            padding-left: 10px;
+            padding-right: 10px;
+            border-radius: 10px;
+        }
+}
