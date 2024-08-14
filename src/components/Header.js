@@ -1,5 +1,5 @@
-import React, { useContext, useState } from 'react'
-import { SidebarContext } from '../context/SidebarContext'
+import React, { useContext, useState, useEffect } from 'react';
+import { SidebarContext } from '../context/SidebarContext';
 import {
   SearchIcon,
   MoonIcon,
@@ -9,46 +9,65 @@ import {
   OutlinePersonIcon,
   OutlineCogIcon,
   OutlineLogoutIcon,
-} from '../icons'
-import { Avatar, Badge, Input, Dropdown, DropdownItem, WindmillContext } from '@windmill/react-ui'
-import LogoutPopup from './LogoutPopup'; // Import the LogoutPopup component
-import { useHistory } from 'react-router-dom'; // Import useHistory to redirect
+} from '../icons';
+import { Avatar, Badge, Input, Dropdown, DropdownItem, WindmillContext } from '@windmill/react-ui';
+import LogoutPopup from './LogoutPopup';
+import { useHistory } from 'react-router-dom';
+import ztellerImage from '../assets/img/zteller.png'; // Use a default image if needed
 
 function Header() {
-  const { mode, toggleMode } = useContext(WindmillContext)
-  const { toggleSidebar } = useContext(SidebarContext)
+  const { mode, toggleMode } = useContext(WindmillContext);
+  const { toggleSidebar } = useContext(SidebarContext);
 
-  const [isNotificationsMenuOpen, setIsNotificationsMenuOpen] = useState(false)
-  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false)
-  const [showLogoutPopup, setShowLogoutPopup] = useState(false); // State variable for logout popup
+  const [isNotificationsMenuOpen, setIsNotificationsMenuOpen] = useState(false);
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+  const [showLogoutPopup, setShowLogoutPopup] = useState(false);
+  const [profileImage, setProfileImage] = useState(() => {
+    return localStorage.getItem('profileImage') || ztellerImage;
+  });
 
-  const history = useHistory(); // Get history object for redirection
+  const history = useHistory();
+
+  useEffect(() => {
+    const savedImage = localStorage.getItem('profileImage');
+    if (savedImage) {
+      setProfileImage(savedImage);
+    }
+  }, []);
+
+  const handleImageChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setProfileImage(reader.result);
+        localStorage.setItem('profileImage', reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   function handleNotificationsClick() {
-    setIsNotificationsMenuOpen(!isNotificationsMenuOpen)
+    setIsNotificationsMenuOpen(!isNotificationsMenuOpen);
   }
 
   function handleProfileClick() {
-    setIsProfileMenuOpen(!isProfileMenuOpen)
+    setIsProfileMenuOpen(!isProfileMenuOpen);
   }
 
-  
-  // Function to toggle the visibility of logout popup
   const toggleLogoutPopup = () => {
     setShowLogoutPopup(!showLogoutPopup);
-    setIsProfileMenuOpen(false); // Close profile dropdown when showing logout popup
+    setIsProfileMenuOpen(false);
   };
 
-  // Function to handle logout action
   const handleLogout = () => {
-    // Perform logout actions here (e.g., clear session, redirect to login page)
-    history.push('/login'); // Redirect to login page
+    history.push('/login');
   };
 
   return (
     <header className="z-40 py-4 bg-white shadow-bottom dark:bg-gray-800">
       <div className="container flex items-center justify-between h-full px-6 mx-auto text-green-400 dark:text-green-200">
-        {/* <!-- Mobile hamburger --> */}
+        {/* Mobile hamburger */}
         <button
           className="p-1 mr-5 -ml-1 rounded-md lg:hidden focus:outline-none focus:shadow-outline-green"
           onClick={toggleSidebar}
@@ -56,7 +75,7 @@ function Header() {
         >
           <MenuIcon className="w-6 h-6" aria-hidden="true" />
         </button>
-        {/* <!-- Search input --> */}
+        {/* Search input */}
         <div className="flex justify-center flex-1 lg:mr-32">
           <div className="relative w-full max-w-xl mr-6 focus-within:text-green-400">
             <div className="absolute inset-y-0 flex items-center pl-2">
@@ -70,7 +89,7 @@ function Header() {
           </div>
         </div>
         <ul className="flex items-center flex-shrink-0 space-x-6">
-          {/* <!-- Theme toggler --> */}
+          {/* Theme toggler */}
           <li className="flex">
             <button
               className="rounded-md focus:outline-none focus:shadow-outline-green"
@@ -84,7 +103,7 @@ function Header() {
               )}
             </button>
           </li>
-          {/* <!-- Notifications menu --> */}
+          {/* Notifications menu */}
           <li className="relative">
             <button
               className="relative align-middle rounded-md focus:outline-none focus:shadow-outline-green"
@@ -93,7 +112,7 @@ function Header() {
               aria-haspopup="true"
             >
               <BellIcon className="w-5 h-5" aria-hidden="true" />
-              {/* <!-- Notification badge --> */}
+              {/* Notification badge */}
               <span
                 aria-hidden="true"
                 className="absolute top-0 right-0 inline-block w-3 h-3 transform translate-x-1 -translate-y-1 bg-red-600 border-2 border-white rounded-full dark:border-gray-800"
@@ -118,7 +137,7 @@ function Header() {
               </DropdownItem>
             </Dropdown>
           </li>
-          {/* <!-- Profile menu --> */}
+          {/* Profile menu */}
           <li className="relative">
             <button
               className="rounded-full focus:shadow-outline-green focus:outline-none"
@@ -128,9 +147,16 @@ function Header() {
             >
               <Avatar
                 className="align-middle"
-                src="https://images.unsplash.com/photo-1502378735452-bc7d86632805?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=200&fit=max&s=aa3a807e1bbdfd4364d1f449eaa96d82"
-                alt=""
+                src={profileImage}
+                alt="Profile"
                 aria-hidden="true"
+              />
+              <input
+                type="file"
+                id="profileImage"
+                className="hidden"
+                accept="image/*"
+                onChange={handleImageChange}
               />
             </button>
             <Dropdown
@@ -148,22 +174,19 @@ function Header() {
               </DropdownItem>
                {/* Logout button */}
                <DropdownItem onClick={toggleLogoutPopup}>
-  <OutlineLogoutIcon className="w-4 h-4 mr-3" aria-hidden="true" />
-  <span>Log out</span>
-</DropdownItem>
-
+                 <OutlineLogoutIcon className="w-4 h-4 mr-3" aria-hidden="true" />
+                 <span>Log out</span>
+               </DropdownItem>
             </Dropdown>
           </li>
         </ul>
       </div>
       {/* Logout popup */}
       {showLogoutPopup && (
-  <LogoutPopup isOpen={showLogoutPopup} onLogout={handleLogout} onClose={toggleLogoutPopup} />
-)}
-    
-
+        <LogoutPopup isOpen={showLogoutPopup} onLogout={handleLogout} onClose={toggleLogoutPopup} />
+      )}
     </header>
   );
 }
 
-export default Header
+export default Header;

@@ -11,6 +11,7 @@ function Forms() {
     phoneNumber: '',
     query: ''
   });
+  const [successMessage, setSuccessMessage] = useState(''); // New state for success message
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -26,6 +27,7 @@ function Forms() {
       phoneNumber: '',
       query: ''
     });
+    setSuccessMessage('Query submitted successfully'); // Set success message
   };
 
   return (
@@ -37,12 +39,12 @@ function Forms() {
           <SectionTitle>Reach Us At</SectionTitle>
           <Label className="mt-4" radio>
             <CallIcon className="w-5 h-5" />
-            <span className="ml-2">+234-815-6622-466</span>
+            <a href='tel:+2348156622466' className="ml-2">+234-815-6622-466</a>
           </Label>
           <br />
           <Label className="mt-4" radio>
             <MailIcon className="w-5 h-5" />
-            <span className="ml-2">contact@zteller.com</span>
+            <a href={'mailto:info@zteller.com'} className="ml-2">info@zteller.com</a>
           </Label >
           <br />
           <Label className="mt-4" radio>
@@ -51,24 +53,21 @@ function Forms() {
           </Label>
           <br /><br /><br />
           <div className="mt-4">
-          <SectionTitle>Easy Contact Links</SectionTitle>
+            <SectionTitle>Easy Contact Links</SectionTitle>
             <div className="mt-2">
               <Label className="ml-6" radio>
                 <a href="contact">
-                <WhatsAppIcon className="w-6 h-6"/>            
-                {/*<span className="ml-2">WhatsApp</span>*/}
+                  <WhatsAppIcon className="w-6 h-6"/>            
                 </a>
               </Label>
               <Label className="ml-6" radio>
-              <a href="contact">
-                <Mail2Icon className="w-6 h-6"/>
-                {/*<span className="ml-2">Email</span>*/}
+                <a href="contact">
+                  <Mail2Icon className="w-6 h-6"/>
                 </a>
               </Label>
               <Label className="ml-6" radio>
-              <a href="contact">
-                <Call2Icon className="w-6 h-6"/>
-                {/*<span className="ml-2">Phone</span>*/}
+                <a href="contact">
+                  <Call2Icon className="w-6 h-6"/>
                 </a>
               </Label>
             </div>
@@ -77,13 +76,14 @@ function Forms() {
         <div className="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
           <SectionTitle>Map</SectionTitle>
           <Label className="mt-4">
-            <iframe width="100%" height="400" title="map" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://maps.google.com/maps?width=100%25&amp;height=600&amp;hl=en&amp;q=University%20of%20Benin,%20Benin%20City,%20Edo%20State,%20Nigeria%20P.M.B.%201154+(Zteller)&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"><a href="https://www.gps.ie/">gps devices</a></iframe>
+            <iframe width="100%" height="400" title="map" frameBorder="0" scrolling="no" marginHeight="0" marginWidth="0" src="https://maps.google.com/maps?width=100%25&amp;height=600&amp;hl=en&amp;q=University%20of%20Benin,%20Benin%20City,%20Edo%20State,%20Nigeria%20P.M.B.%201154+(Zteller)&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"><a href="https://www.gps.ie/">gps devices</a></iframe>
           </Label>
         </div>
       </div>
 
       <SectionTitle>Feedback & Queries</SectionTitle>
       <div className="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
+        {successMessage && <div className="mb-4 text-green-500">{successMessage}</div>}
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <Label htmlFor="issue" className="block text-gray-700 mb-2">Select Issue:</Label>
@@ -106,7 +106,12 @@ function Forms() {
             <Label htmlFor="query" className="block text-gray-700 mb-2">Query:</Label>
             <Textarea id="query" name="query" onChange={handleChange} value={formData.query} placeholder="Enter your query" rows="4" className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500" required/>
           </div>
-          <Button type="submit" className="w-full bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none">Submit</Button>
+          <Button 
+            style={{ backgroundColor:'#41aa5e' }} 
+            type="submit" 
+            className="w-full bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none">
+            Submit
+          </Button>
         </form>
       </div>
     </>

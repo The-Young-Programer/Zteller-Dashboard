@@ -5,6 +5,7 @@ import SectionTitle from '../components/Typography/SectionTitle'
 import CTA from '../components/CTA'
 import InfoCard from '../components/Cards/InfoCard'
 import { Card, CardBody } from '@windmill/react-ui'
+import paystack from './Paystack_Logo.png'
 import { AmountInIcon, AmountOutIcon, MoneyIcon, PeopleIcon } from '../icons'
 import RoundIcon from '../components/RoundIcon'
 
@@ -65,21 +66,25 @@ function Cards() {
         </InfoCard>
       </div>
 
-      <SectionTitle>Payment Methode</SectionTitle>
+      <SectionTitle>Payment Method</SectionTitle>
 
       <div className="grid gap-6 mb-8 md:grid-cols-2">
         <Card>
           <CardBody>
-            <p className="mb-4 font-semibold text-gray-600 dark:text-gray-300">Revenue</p>
+            <img 
+            style={{
+              maxHeight:"20px",
+              
+              }}
+            src={paystack} className="mb-4 font-semibold text-gray-600 dark:text-gray-300"/>
             <p className="text-gray-600 dark:text-gray-400">
-              Lorem ipsum dolor sit, amet consectetur adipisicing elit. Fuga, cum commodi a omnis
-              numquam quod? Totam exercitationem quos hic ipsam at qui cum numquam, sed amet
-              ratione! Ratione, nihil dolorum.
+            This is a secure payment gateway integration that facilitates swift and direct transfers of funds from students to your designated bank account. Upon successful payment, an authentic and digital print-ready receipt is generated for record keeping purposes and verifications. 
+            Through this strategic partnership with Paystack, all financial transactions are encrypted and processed seamlessly, upholding the highest standards of security and transparency.
             </p>
           </CardBody>
         </Card>
 
-        <Card colored className="text-white bg-green-400">
+        {/* <Card colored className="text-white bg-green-400">
           <CardBody>
             <p className="mb-4 font-semibold">Colored card</p>
             <p>
@@ -88,7 +93,7 @@ function Cards() {
               ratione! Ratione, nihil dolorum.
             </p>
           </CardBody>
-        </Card>
+        </Card> */}
       </div>
     </>
   )

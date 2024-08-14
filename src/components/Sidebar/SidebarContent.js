@@ -46,12 +46,39 @@ function SidebarContent() {
         )}
       </ul>
       <div className="px-6 my-6">
-        <Button tag="a" href="contact" className="bg-green-400">
+        <Button 
+         style={{
+        backgroundColor:'#41aa5e'
+        }}
+        tag="a" href="contact" className="bg-green-400">
           Contact Us
           <span className="ml-2" aria-hidden="true">
             +
           </span>
         </Button>
+      </div>
+      <div style={{
+        position:"fixed",
+        display:"flex",
+        justifyContent:"center",
+       bottom:"0",
+       marginLeft:"30px",
+       textAlign:"center"
+        }}>
+        <p 
+        style={{
+          
+          marginRight:"-22px"
+          }}
+          >Powered by</p>
+      <a className="ml-6 flex items-center justify-center" href="/app">
+      <img 
+      style={{
+        maxHeight:"20px",
+        
+        }}
+      src={ztellerLogo} alt="Zteller Logo" className="h-10 w-auto" />
+      </a>
       </div>
     </div>
   )
