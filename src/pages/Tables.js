@@ -121,7 +121,14 @@ function Tables() {
             onChange={onPageChangeTable1}
             label="Table navigation"
           />
-          <Button tag="a" href="dashboard"> Download List </Button>
+          <Button 
+          style={{
+            marginTop:'10px',
+          backgroundColor:'#41aa5e'
+          }}
+           tag="a" href="dashboard" 
+         
+          > Download List </Button>
         </TableFooter>
       </TableContainer>
 
@@ -189,7 +196,12 @@ function Tables() {
             onChange={onPageChangeTable2}
             label="Table navigation"
           />
-          <Button tag="a" href="dashboard"> Download List </Button>
+          <Button
+          style={{
+            marginTop:'10px',
+          backgroundColor:'#41aa5e'
+          }}
+           tag="a" href="dashboard"> Download List </Button>
         </TableFooter>
       </TableContainer>
 
@@ -258,7 +270,12 @@ function Tables() {
             onChange={onPageChangeTable2}
             label="Table navigation"
           />
-          <Button tag="a" href="dashboard"> Download List </Button>
+          <Button
+          style={{
+            marginTop:'10px',
+          backgroundColor:'#41aa5e'
+          }}
+           tag="a" href="dashboard"> Download List </Button>
         </TableFooter>
       </TableContainer>
     </>
