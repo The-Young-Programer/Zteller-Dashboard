@@ -175,14 +175,20 @@ function Dashboard() {
               </TableBody>
             </Table>
 
-            <TableFooter>
+            <TableFooter >
               <Pagination
                 totalResults={totalResults}
                 resultsPerPage={resultsPerPage}
                 label="Table navigation"
                 onChange={onPageChange}
               />
-              <Button tag="a" href="dashboard"> Download Income Statement </Button>
+              <Button tag="a" href="dashboard"
+               style={{
+                marginTop:'10px',
+              backgroundColor:'#41aa5e'
+              }}
+
+              > Download Income Statement </Button>
             </TableFooter>
           </TableContainer>
 

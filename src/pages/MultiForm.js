@@ -1,7 +1,51 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 const MultiForm = () => {
   const [activeForm, setActiveForm] = useState('contact');
+  const [formErrors, setFormErrors] = useState({
+    contact: false,
+    exco: false,
+    account: false
+  });
+
+  const handleSave = () => {
+    let errors = { contact: false, exco: false, account: false };
+
+    if (activeForm === 'contact') {
+      errors.contact = !validateContactForm();
+    } else if (activeForm === 'exco') {
+      errors.exco = !validateExcoForm();
+    } else if (activeForm === 'account') {
+      errors.account = !validateAccountForm();
+    }
+
+    setFormErrors(errors);
+  };
+
+  const validateContactForm = () => {
+    const name = document.querySelector('input[name="name"]').value;
+    const number = document.querySelector('input[name="number"]').value;
+    const email = document.querySelector('input[name="email"]').value;
+    const address = document.querySelector('input[name="address"]').value;
+    return name && number && email && address;
+  };
+
+  const validateExcoForm = () => {
+    const association = document.querySelector('input[name="association"]').value;
+    const school = document.querySelector('select[name="school"]').value;
+    const faculty = document.querySelector('select[name="faculty"]').value;
+    const department = document.querySelector('select[name="department"]').value;
+    const position = document.querySelector('select[name="position"]').value;
+    const year = document.querySelector('select[name="year"]').value;
+    return association && school && faculty && department && position && year;
+  };
+
+  const validateAccountForm = () => {
+    const bankName = document.querySelector('input[name="bankName"]').value;
+    const accountName = document.querySelector('input[name="accountName"]').value;
+    const accountNumber = document.querySelector('input[name="accountNumber"]').value;
+    return bankName && accountName && accountNumber;
+  };
 
   return (
     <div className="flex-1 bg-white shadow-lg rounded-lg p-8 m-4">
@@ -31,14 +75,14 @@ const MultiForm = () => {
           Account
         </button>
       </div>
-      {activeForm === 'contact' && <ContactForm />}
-      {activeForm === 'exco' && <ExcoForm />}
-      {activeForm === 'account' && <AccountForm />}
+      {activeForm === 'contact' && <ContactForm onSave={handleSave} showError={formErrors.contact} />}
+      {activeForm === 'exco' && <ExcoForm onSave={handleSave} showError={formErrors.exco} />}
+      {activeForm === 'account' && <AccountForm onSave={handleSave} showError={formErrors.account} />}
     </div>
   );
 };
 
-const ContactForm = () => {
+const ContactForm = ({ onSave, showError }) => {
   const [isLoading, setLoading] = useState(false);
   const [isSuccess, setSuccess] = useState(false);
   const [formData, setFormData] = useState({
@@ -47,13 +91,6 @@ const ContactForm = () => {
     email: '',
     address: ''
   });
-
-  useEffect(() => {
-    const savedData = JSON.parse(localStorage.getItem('formData'));
-    if (savedData) {
-      setFormData(savedData);
-    }
-  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -64,16 +101,21 @@ const ContactForm = () => {
   };
 
   const handleSave = () => {
+    onSave(); // Trigger the validation from parent
+    if (!validateForm()) return;
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
       setSuccess(true);
-      localStorage.setItem('formData', JSON.stringify(formData));
-      localStorage.setItem('profileData', JSON.stringify(formData));
+      localStorage.setItem('contactFormData', JSON.stringify(formData));
       setTimeout(() => {
         setSuccess(false);
       }, 3000);
     }, 3000);
+  };
+
+  const validateForm = () => {
+    return formData.name && formData.number && formData.email && formData.address;
   };
 
   return (
@@ -92,6 +134,11 @@ const ContactForm = () => {
         <button onClick={handleSave} className="w-full mt-8 px-4 py-4 bg-green-400 text-white rounded-lg hover:bg-green-500 transition duration-200" disabled={isLoading}>
           Save
         </button>
+        {showError && (
+          <div className="mt-4 p-2 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+            Please fill in all required fields.
+          </div>
+        )}
         {isSuccess && (
           <div className="mt-4 p-2 bg-green-100 border border-green-400 text-green-700 rounded-lg">
             Saved successfully!
@@ -102,25 +149,17 @@ const ContactForm = () => {
   );
 };
 
-const ExcoForm = () => {
+const ExcoForm = ({ onSave, showError }) => {
   const [isLoading, setLoading] = useState(false);
   const [isSuccess, setSuccess] = useState(false);
   const [formData, setFormData] = useState({
-    name: '',
     association: '',
     school: '',
-    position: '',
-    year: '',
     faculty: '',
-    department: ''
+    department: '',
+    position: '',
+    year: ''
   });
-
-  useEffect(() => {
-    const savedData = JSON.parse(localStorage.getItem('formData'));
-    if (savedData) {
-      setFormData(savedData);
-    }
-  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -131,16 +170,22 @@ const ExcoForm = () => {
   };
 
   const handleSave = () => {
+    onSave(); // Trigger the validation from parent
+    if (!validateForm()) return;
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
       setSuccess(true);
-      localStorage.setItem('formData', JSON.stringify(formData));
-      localStorage.setItem('profileData', JSON.stringify(formData));
+      localStorage.setItem('excoFormData', JSON.stringify(formData));
       setTimeout(() => {
         setSuccess(false);
       }, 3000);
     }, 3000);
+  };
+
+  const validateForm = () => {
+    return formData.association && formData.school && formData.faculty &&
+           formData.department && formData.position && formData.year;
   };
 
   return (
@@ -152,62 +197,77 @@ const ExcoForm = () => {
       )}
       <h2 className="text-2xl font-bold mb-6">Exco Information</h2>
       <div className={`space-y-6 ${isLoading ? 'opacity-50' : ''}`}>
-      <input 
-          type="text" 
-          name="association" 
-          placeholder="Association" 
-          value={formData.association} 
-          onChange={handleChange} 
-          className="w-full p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400" 
-        />
-        <select name="school" value={formData.school} onChange={handleChange} className="w-full p-4 border bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400">
-          <option value="" disabled>Select School</option>
-          <option>Uniben</option>
-          <option disabled>Unilag</option>
-          <option disabled>UniAbuja</option>
-        </select>
         <input 
           type="text" 
           name="association" 
           placeholder="Association" 
           value={formData.association} 
           onChange={handleChange} 
-          className="w-full p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400" 
+          className="w-full p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
         />
-        <select name="faculty" value={formData.faculty} onChange={handleChange} className="w-full p-4 border bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400">
-          <option value="" disabled>Select Faculty</option>
-          <option>Physical Science</option>
-          <option disabled>Management Science</option>
-          <option disabled>Life Science</option>
+        <select 
+          name="school" 
+          value={formData.school} 
+          onChange={handleChange} 
+          className="w-full p-4 border bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
+        >
+          <option value="" disabled>Select School</option>
+          <option>Uniben</option>
+          <option>Unilag</option>
+          <option>Unilorin</option>
         </select>
-        <select name="department" value={formData.department} onChange={handleChange} className="w-full p-4 border bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400">
+        <select 
+          name="faculty" 
+          value={formData.faculty} 
+          onChange={handleChange} 
+          className="w-full p-4 border bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
+        >
+          <option value="" disabled>Select Faculty</option>
+          <option>Science</option>
+          <option>Arts</option>
+          <option>Engineering</option>
+        </select>
+        <select 
+          name="department" 
+          value={formData.department} 
+          onChange={handleChange} 
+          className="w-full p-4 border bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
+        >
           <option value="" disabled>Select Department</option>
-          <option>Chemistry</option>
           <option>Computer Science</option>
-          <option>Geology</option>
           <option>Mathematics</option>
           <option>Physics</option>
-          <option>Statistics</option>
         </select>
-        <select name="position" value={formData.position} onChange={handleChange} className="w-full p-4 border bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400">
+        <select 
+          name="position" 
+          value={formData.position} 
+          onChange={handleChange} 
+          className="w-full p-4 border bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
+        >
           <option value="" disabled>Select Position</option>
           <option>President</option>
           <option>Secretary</option>
           <option>Treasurer</option>
         </select>
-        <select name="year" value={formData.year} onChange={handleChange} className="w-full p-4 border bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400">
+        <select 
+          name="year" 
+          value={formData.year} 
+          onChange={handleChange} 
+          className="w-full p-4 border bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
+        >
           <option value="" disabled>Select Year</option>
-          <option>2023/2024</option>
-          <option>2022/2023</option>
-          <option>2021/2022</option>
-          <option>2020/2021</option>
-          <option>2019/2020</option>
+          <option>2022</option>
+          <option>2023</option>
+          <option>2024</option>
         </select>
-        <h3 className="text-xl font-semibold mb-4">Upload an ID</h3>
-        <input type="file" className="w-full p-4 border bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400" placeholder="Verification Document" />
         <button onClick={handleSave} className="w-full mt-8 px-4 py-4 bg-green-400 text-white rounded-lg hover:bg-green-500 transition duration-200" disabled={isLoading}>
           Save
         </button>
+        {showError && (
+          <div className="mt-4 p-2 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+            Please fill in all required fields.
+          </div>
+        )}
         {isSuccess && (
           <div className="mt-4 p-2 bg-green-100 border border-green-400 text-green-700 rounded-lg">
             Saved successfully!
@@ -218,7 +278,7 @@ const ExcoForm = () => {
   );
 };
 
-const AccountForm = () => {
+const AccountForm = ({ onSave, showError }) => {
   const [isLoading, setLoading] = useState(false);
   const [isSuccess, setSuccess] = useState(false);
   const [formData, setFormData] = useState({
@@ -226,13 +286,6 @@ const AccountForm = () => {
     accountName: '',
     accountNumber: ''
   });
-
-  useEffect(() => {
-    const savedData = JSON.parse(localStorage.getItem('formData'));
-    if (savedData) {
-      setFormData(savedData);
-    }
-  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -243,16 +296,21 @@ const AccountForm = () => {
   };
 
   const handleSave = () => {
+    onSave(); // Trigger the validation from parent
+    if (!validateForm()) return;
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
       setSuccess(true);
-      localStorage.setItem('formData', JSON.stringify(formData));
-      localStorage.setItem('profileData', JSON.stringify(formData));
+      localStorage.setItem('accountFormData', JSON.stringify(formData));
       setTimeout(() => {
         setSuccess(false);
       }, 3000);
     }, 3000);
+  };
+
+  const validateForm = () => {
+    return formData.bankName && formData.accountName && formData.accountNumber;
   };
 
   return (
@@ -264,12 +322,38 @@ const AccountForm = () => {
       )}
       <h2 className="text-2xl font-bold mb-6">Account Information</h2>
       <div className={`space-y-6 ${isLoading ? 'opacity-50' : ''}`}>
-        <input type="text" name="bankName" placeholder="Bank Name" value={formData.bankName} onChange={handleChange} className="w-full p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400" />
-        <input type="text" name="accountName" placeholder="Account Name" value={formData.accountName} onChange={handleChange} className="w-full p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400" />
-        <input type="number" name="accountNumber" placeholder="Account Number" value={formData.accountNumber} onChange={handleChange} className="w-full p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400" />
+        <input
+          type="text"
+          name="bankName"
+          placeholder="Bank Name"
+          value={formData.bankName}
+          onChange={handleChange}
+          className="w-full p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
+        />
+        <input
+          type="text"
+          name="accountName"
+          placeholder="Account Name"
+          value={formData.accountName}
+          onChange={handleChange}
+          className="w-full p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
+        />
+        <input
+          type="text"
+          name="accountNumber"
+          placeholder="Account Number"
+          value={formData.accountNumber}
+          onChange={handleChange}
+          className="w-full p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
+        />
         <button onClick={handleSave} className="w-full mt-8 px-4 py-4 bg-green-400 text-white rounded-lg hover:bg-green-500 transition duration-200" disabled={isLoading}>
           Save
         </button>
+        {showError && (
+          <div className="mt-4 p-2 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+            Please fill in all required fields.
+          </div>
+        )}
         {isSuccess && (
           <div className="mt-4 p-2 bg-green-100 border border-green-400 text-green-700 rounded-lg">
             Saved successfully!

@@ -42,6 +42,7 @@ const ProfileCard = () => {
       <div className="text-center">
         <div className="relative mx-auto w-24 h-24 mb-4">
           <img
+          
             src={profileImage}
             alt="Profile"
             className="w-24 h-24 rounded-full object-cover mx-auto"
@@ -67,6 +68,7 @@ const ProfileCard = () => {
             <label htmlFor="school-name" className="w-full md:w-1/4 font-bold text-gray-700">School Name:</label>
             <input type="text" id="school-name" value={profileData.school} className="w-full md:w-1/3 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 bg-gray-200" disabled />
           </div>
+         
           <div className="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-4">
             <label htmlFor="departmental-president" className="w-full md:w-1/4 font-bold text-gray-700">Position:</label>
             <input type="text" id="departmental-president" value={profileData.position} className="w-full md:w-1/3 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 bg-gray-200" disabled />

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './excoform.css'
+import './excoform.css';
 
 const MultiForm = ({ onClose }) => {
   const [activeForm, setActiveForm] = useState('contact');
@@ -28,7 +28,7 @@ const MultiForm = ({ onClose }) => {
   return (
     <div className="flex-1 bg-white shadow-lg rounded-lg p-8 m-4">
       <div className="flex justify-around mb-8">
-        <button id='but'
+        <button
           onClick={() => setActiveForm('contact')}
           className={`px-6 py-2 rounded-full text-lg font-semibold ${
             activeForm === 'contact' ? 'bg-green-400 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
@@ -36,7 +36,7 @@ const MultiForm = ({ onClose }) => {
         >
           Contact
         </button>
-        <button id='but'
+        <button
           onClick={() => setActiveForm('exco')}
           className={`px-6 py-2 rounded-full text-lg font-semibold ${
             activeForm === 'exco' ? 'bg-green-400 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
@@ -44,7 +44,7 @@ const MultiForm = ({ onClose }) => {
         >
           Exco
         </button>
-        <button id='but'
+        <button
           onClick={() => setActiveForm('account')}
           className={`px-6 py-2 rounded-full text-lg font-semibold ${
             activeForm === 'account' ? 'bg-green-400 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
@@ -88,6 +88,7 @@ const ContactForm = ({ onNext }) => {
     email: '',
     address: ''
   });
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     const savedData = JSON.parse(localStorage.getItem('formData'));
@@ -105,6 +106,17 @@ const ContactForm = ({ onNext }) => {
   };
 
   const handleSave = () => {
+    const newErrors = {};
+    if (!formData.name) newErrors.name = 'Name is required';
+    if (!formData.number) newErrors.number = 'Phone Number is required';
+    if (!formData.email) newErrors.email = 'Email is required';
+    if (!formData.address) newErrors.address = 'Address is required';
+
+    if (Object.keys(newErrors).length) {
+      setErrors(newErrors);
+      return;
+    }
+
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
@@ -126,11 +138,47 @@ const ContactForm = ({ onNext }) => {
       )}
       <h2 className="text-2xl font-bold mb-6">Contact Information</h2>
       <div className={`space-y-6 ${isLoading ? 'opacity-50' : ''}`}>
-        <input type="text" name="name" placeholder="Full Name" value={formData.name} onChange={handleChange} className="w-full p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400" />
-        <input type="number" name="number" placeholder="Phone Number" value={formData.number} onChange={handleChange} className="w-full p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400" />
-        <input type="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange} className="w-full p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400" />
-        <input type="text" name="address" placeholder="Address" value={formData.address} onChange={handleChange} className="w-full p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400" />
-        <button onClick={handleSave} className="w-full mt-8 px-4 py-4 bg-green-400 text-white rounded-lg hover:bg-green-500 transition duration-200" disabled={isLoading}>
+        <input
+          type="text"
+          name="name"
+          placeholder="Full Name"
+          value={formData.name}
+          onChange={handleChange}
+          className={`w-full p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 ${errors.name ? 'border-red-500' : ''}`}
+        />
+        {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
+        <input
+          type="number"
+          name="number"
+          placeholder="Phone Number"
+          value={formData.number}
+          onChange={handleChange}
+          className={`w-full p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 ${errors.number ? 'border-red-500' : ''}`}
+        />
+        {errors.number && <p className="text-red-500 text-sm">{errors.number}</p>}
+        <input
+          type="email"
+          name="email"
+          placeholder="Email"
+          value={formData.email}
+          onChange={handleChange}
+          className={`w-full p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 ${errors.email ? 'border-red-500' : ''}`}
+        />
+        {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
+        <input
+          type="text"
+          name="address"
+          placeholder="Address"
+          value={formData.address}
+          onChange={handleChange}
+          className={`w-full p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 ${errors.address ? 'border-red-500' : ''}`}
+        />
+        {errors.address && <p className="text-red-500 text-sm">{errors.address}</p>}
+        <button
+          onClick={handleSave}
+          className="w-full mt-8 px-4 py-4 bg-green-400 text-white rounded-lg hover:bg-green-500 transition duration-200"
+          disabled={isLoading}
+        >
           Save
         </button>
         {isSuccess && (
@@ -154,13 +202,100 @@ const ExcoForm = ({ onNext }) => {
     faculty: '',
     department: ''
   });
+  const [errors, setErrors] = useState({});
+  const [file, setFile] = useState(null); // Add state to track file input
 
-  useEffect(() => {
-    const savedData = JSON.parse(localStorage.getItem('formData'));
-    if (savedData) {
-      setFormData(savedData);
-    }
-  }, []);
+  // Mapping faculties to their respective departments
+  const facultyDepartments = {
+    'Agriculture': [
+      'Department of Crop Science',
+      'Department of Animal Science',
+      'Department of Agricultural Economics',
+      'Department of Soil Science & Land Management',
+      'Department of Forest Resources & Wildlife Management',
+      'Department of Aquaculture & Fisheries Management',
+      'Food Science and Nutrition'
+    ],
+    'Arts': [
+      'Philosophy',
+      'Department of Theatre Arts',
+      'Department of Religions',
+      'Department of Linguistics Studies',
+      'Foreign Languages',
+      'English and Literature',
+      'History and International Studies'
+    ],
+    'Education': [
+      // Add Education departments here
+    ],
+    'Engineering': [
+      "Chemical Engineering",
+      "Civil Engineering",
+      "Computer Engineering",
+      "Electrical/Electronics Engineering",
+      "Mechanical Engineering",
+      "Petroleum Engineering",
+      "Production Engineering",
+      "Structural Engineering Department",
+      "Metallurgical and Material Engineering"
+    ],
+    'Environmental Science': [
+      // Add Environmental Science departments here
+    ],
+    'Law': [
+     "Private Law",
+    "Public and Property Law",
+    "Business Law",
+    "Jurisprudence and International Law"
+    ],
+    'Life Science': [
+      "Animal and Environmental Biology",
+      "Biochemistry",
+      "Microbiology",
+      "Optometry",
+      "Plant Biology and Biotechnology",
+      "Environmental Management and Toxicology",
+      "Science Laboratory Technology"
+    ],
+    'Management Science': [
+      "Accounting",
+    "Actuarial Science",
+    "Banking and Finance",
+    "Business Administration",
+    "Human Resource Management",
+    "Insurance",
+    "Marketing",
+    "Taxation"
+    ],
+    'Pharmacy': [
+      "Pharmaceutical Chemistry",
+      "Pharmaceutical Microbiology",
+      "Pharmacology and Toxicology",
+      "Clinical Pharmacy and Pharmacy Practice"
+    ],
+    'Physical Science': [
+      "Chemistry",
+      "Computer Science",
+      "Geology",
+      "Mathematics",
+      "Physics",
+      "Statistics"
+    ],
+    'Social Science': [
+      "Economics",
+    "Political Science",
+    "Public Administration",
+    "Geography and Regional Planning",
+    "Social Work",
+    "Sociology and Anthropology"
+    ],
+    'College of Medicine': [
+      // Add College of Medicine departments here
+    ],
+    'Veterinary Medicine': [
+      // Add Veterinary Medicine departments here
+    ]
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -170,13 +305,30 @@ const ExcoForm = ({ onNext }) => {
     }));
   };
 
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]); // Set the file
+  };
+
   const handleSave = () => {
+    const newErrors = {};
+    if (!formData.association) newErrors.association = 'Association is required';
+    if (!formData.school) newErrors.school = 'School is required';
+    if (!formData.position) newErrors.position = 'Position is required';
+    if (!formData.year) newErrors.year = 'Year is required';
+    if (!formData.faculty) newErrors.faculty = 'Faculty is required';
+    if (!formData.department) newErrors.department = 'Department is required';
+    if (!file) newErrors.file = 'ID upload is required'; // Add file validation
+
+    if (Object.keys(newErrors).length) {
+      setErrors(newErrors);
+      return;
+    }
+
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
       setSuccess(true);
       localStorage.setItem('formData', JSON.stringify(formData));
-      localStorage.setItem('profileData', JSON.stringify(formData));
       setTimeout(() => {
         setSuccess(false);
         onNext();
@@ -185,51 +337,88 @@ const ExcoForm = ({ onNext }) => {
   };
 
   return (
-    <div id='exco' className="relative">
+    <div className="relative">
       {isLoading && (
         <div className="absolute inset-0 bg-gray-200 bg-opacity-50 flex items-center justify-center z-10">
           <div className="text-black text-2xl">Saving ...</div>
         </div>
       )}
       <h2 className="text-2xl font-bold mb-6">Exco Information</h2>
-      <div style={{'@media (max-width: 768px)': {color:'blue'}}} className={`space-y-6 ${isLoading ? 'opacity-50' : ''}`}>
-      <input 
-          type="text" 
-          name="association" 
-          placeholder="Association" 
-          value={formData.association} 
-          onChange={handleChange} 
-          className="w-full p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400" 
+      <div className={`space-y-6 ${isLoading ? 'opacity-50' : ''}`}>
+        <input
+          type="text"
+          name="association"
+          placeholder="Association"
+          value={formData.association}
+          onChange={handleChange}
+          className={`w-full p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 ${errors.association ? 'border-red-500' : ''}`}
         />
-        <select name="school" value={formData.school} onChange={handleChange} className="w-full p-4 border bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400">
+        {errors.association && <p className="text-red-500 text-sm">{errors.association}</p>}
+        
+        <select
+          name="school"
+          value={formData.school}
+          onChange={handleChange}
+          className="w-full p-4 border bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
+        >
           <option value="" disabled>Select School</option>
           <option>Uniben</option>
           <option disabled>Unilag</option>
           <option disabled>UniAbuja</option>
         </select>
-      
-        <select name="faculty" value={formData.faculty} onChange={handleChange} className="w-full p-4 border bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400">
+        {errors.school && <p className="text-red-500 text-sm">{errors.school}</p>}
+
+        <select
+          name="faculty"
+          value={formData.faculty}
+          onChange={(e) => {
+            handleChange(e);
+            setFormData((prevData) => ({
+              ...prevData,
+              department: '' // Reset department when faculty changes
+            }));
+          }}
+          className="w-full p-4 border bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
+        >
           <option value="" disabled>Select Faculty</option>
-          <option>Physical Science</option>
-          <option disabled>Management Science</option>
-          <option disabled>Life Science</option>
+          {Object.keys(facultyDepartments).map(faculty => (
+            <option key={faculty} value={faculty}>{faculty}</option>
+          ))}
         </select>
-        <select name="department" value={formData.department} onChange={handleChange} className="w-full p-4 border bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400">
+        {errors.faculty && <p className="text-red-500 text-sm">{errors.faculty}</p>}
+        
+        <select
+          name="department"
+          value={formData.department}
+          onChange={handleChange}
+          className="w-full p-4 border bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
+        >
           <option value="" disabled>Select Department</option>
-          <option>Chemistry</option>
-          <option>Computer Science</option>
-          <option>Geology</option>
-          <option>Mathematics</option>
-          <option>Physics</option>
-          <option>Statistics</option>
+          {formData.faculty && facultyDepartments[formData.faculty]?.map(dept => (
+            <option key={dept} value={dept}>{dept}</option>
+          ))}
         </select>
-        <select name="position" value={formData.position} onChange={handleChange} className="w-full p-4 border bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400">
+        {errors.department && <p className="text-red-500 text-sm">{errors.department}</p>}
+        
+        <select
+          name="position"
+          value={formData.position}
+          onChange={handleChange}
+          className="w-full p-4 border bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
+        >
           <option value="" disabled>Select Position</option>
           <option>President</option>
           <option>Secretary</option>
           <option>Treasurer</option>
         </select>
-        <select name="year" value={formData.year} onChange={handleChange} className="w-full p-4 border bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400">
+        {errors.position && <p className="text-red-500 text-sm">{errors.position}</p>}
+        
+        <select
+          name="year"
+          value={formData.year}
+          onChange={handleChange}
+          className="w-full p-4 border bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
+        >
           <option value="" disabled>Select Year</option>
           <option>2023/2024</option>
           <option>2022/2023</option>
@@ -237,9 +426,21 @@ const ExcoForm = ({ onNext }) => {
           <option>2020/2021</option>
           <option>2019/2020</option>
         </select>
+        {errors.year && <p className="text-red-500 text-sm">{errors.year}</p>}
+        
         <h3 className="text-xl font-semibold mb-4">Upload an ID</h3>
-        <input type="file" className="w-full p-4 border bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400" placeholder="Verification Document" />
-        <button onClick={handleSave} className="w-full mt-8 px-4 py-4 bg-green-400 text-white rounded-lg hover:bg-green-500 transition duration-200" disabled={isLoading}>
+        <input
+          type="file"
+          onChange={handleFileChange}
+          className={`w-full p-4 border bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 ${errors.file ? 'border-red-500' : ''}`}
+        />
+        {errors.file && <p className="text-red-500 text-sm">{errors.file}</p>}
+        
+        <button
+          onClick={handleSave}
+          className="w-full mt-8 px-4 py-4 bg-green-400 text-white rounded-lg hover:bg-green-500 transition duration-200"
+          disabled={isLoading}
+        >
           Save
         </button>
         {isSuccess && (
@@ -260,6 +461,7 @@ const AccountForm = ({ onComplete }) => {
     accountNumber: '',
     bankName: ''
   });
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     const savedData = JSON.parse(localStorage.getItem('formData'));
@@ -277,6 +479,16 @@ const AccountForm = ({ onComplete }) => {
   };
 
   const handleSave = () => {
+    const newErrors = {};
+    if (!formData.accountName) newErrors.accountName = 'Account Name is required';
+    if (!formData.accountNumber) newErrors.accountNumber = 'Account number is required';
+    if (!formData.bankName) newErrors.bankName = 'Bank name is required';
+
+    if (Object.keys(newErrors).length) {
+      setErrors(newErrors);
+      return;
+    }
+
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
@@ -299,9 +511,16 @@ const AccountForm = ({ onComplete }) => {
       <h2 className="text-2xl font-bold mb-6">Account Information</h2>
       <div className={`space-y-6 ${isLoading ? 'opacity-50' : ''}`}>
       <input type="text" name="accountName" placeholder="Account Name" value={formData.accountName} onChange={handleChange} className="w-full p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400" />
+        {errors.accountName && <p className="text-red-500 text-sm">{errors.accountName}</p>}
         <input type="number" name="accountNumber" placeholder="Account Number" value={formData.accountNumber} onChange={handleChange} className="w-full p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400" />
+        {errors.accountNumber && <p className="text-red-500 text-sm">{errors.accountNumber}</p>}
         <input type="text" name="bankName" placeholder="Bank Name" value={formData.bankName} onChange={handleChange} className="w-full p-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400" />
-        <button onClick={handleSave} className="w-full mt-8 px-4 py-4 bg-green-400 text-white rounded-lg hover:bg-green-500 transition duration-200" disabled={isLoading}>
+        {errors.bankName && <p className="text-red-500 text-sm">{errors.bankName}</p>}
+        <button
+          onClick={handleSave}
+          className="w-full mt-8 px-4 py-4 bg-green-400 text-white rounded-lg hover:bg-green-500 transition duration-200"
+          disabled={isLoading}
+        >
           Save
         </button>
         {isSuccess && (
