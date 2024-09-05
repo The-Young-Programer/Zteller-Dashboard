@@ -18,51 +18,47 @@ import {
 import { EditIcon } from '../icons'
 
 import response from '../utils/demo/tableData'
-// make a copy of the data, for the second table
+
 const response2 = response.concat([])
 
 function Tables() {
-  /**
-   * DISCLAIMER: This code could be badly improved, but for the sake of the example
-   * and readability, all the logic for both table are here.
-   * You would be better served by dividing each table in its own
-   * component, like Table(?) and TableWithActions(?) hiding the
-   * presentation details away from the page view.
-   */
+  const [isCardVisible, setIsCardVisible] = useState(false)
+  const [selectedUser, setSelectedUser] = useState(null)
 
-  // setup pages control for every table
+  const [filter, setFilter] = useState('All')
+
+  const handleEditClick = (user) => {
+    setSelectedUser(user)
+    setIsCardVisible(true)
+  }
+
+  const closeCard = () => {
+    setIsCardVisible(false)
+    setSelectedUser(null)
+  }
+
   const [pageTable1, setPageTable1] = useState(1)
-  const [pageTable2, setPageTable2] = useState(1)
+  const [dataTable, setDataTable] = useState([])
 
-  // setup data for every table
-  const [dataTable1, setDataTable1] = useState([])
-  const [dataTable2, setDataTable2] = useState([])
-
-  // pagination setup
   const resultsPerPage = 10
   const totalResults = response.length
 
-  // pagination change control
   function onPageChangeTable1(p) {
     setPageTable1(p)
   }
 
-  // pagination change control
-  function onPageChangeTable2(p) {
-    setPageTable2(p)
-  }
-
-  // on page change, load new sliced data
-  // here you would make another server request for new data
   useEffect(() => {
-    setDataTable1(response.slice((pageTable1 - 1) * resultsPerPage, pageTable1 * resultsPerPage))
-  }, [pageTable1])
+    // Filter data based on the selected filter
+    const filteredData = response.filter((student) => {
+      if (filter === 'All') return true
+      if (filter === 'Paid') return student.label === 'paid'
+      if (filter === 'Unpaid') return student.label === 'unpaid'
+      return true
+    })
 
-  // on page change, load new sliced data
-  // here you would make another server request for new data
-  useEffect(() => {
-    setDataTable2(response2.slice((pageTable2 - 1) * resultsPerPage, pageTable2 * resultsPerPage))
-  }, [pageTable2])
+    // Paginate filtered data
+    setDataTable(filteredData.slice((pageTable1 - 1) * resultsPerPage, pageTable1 * resultsPerPage))
+  }, [pageTable1, filter])
 
   return (
     <>
@@ -71,6 +67,31 @@ function Tables() {
       <CTA />
 
       <SectionTitle>All Students</SectionTitle>
+
+      <div className="mb-4 flex space-x-4">
+        <Button
+          style={{ backgroundColor: filter === 'All' ? '#41aa5e' : 'transparent' }}
+          layout={filter === 'All' ? 'primary' : 'outline'}
+          onClick={() => setFilter('All')}
+        >
+          All Students
+        </Button>
+        <Button
+          style={{ backgroundColor: filter === 'Paid' ? '#41aa5e' : 'transparent' }}
+          layout={filter === 'Paid' ? 'primary' : 'outline'}
+          onClick={() => setFilter('Paid')}
+        >
+          Paid Students
+        </Button>
+        <Button
+          style={{ backgroundColor: filter === 'Unpaid' ? '#41aa5e' : 'transparent' }}
+          layout={filter === 'Unpaid' ? 'primary' : 'outline'}
+          onClick={() => setFilter('Unpaid')}
+        >
+          Unpaid Students
+        </Button>
+      </div>
+
       <TableContainer className="mb-8">
         <Table>
           <TableHeader>
@@ -81,17 +102,16 @@ function Tables() {
               <TableCell>Amount</TableCell>
               <TableCell>Status</TableCell>
               <TableCell>Date</TableCell>
+              <TableCell>Action</TableCell>
             </tr>
           </TableHeader>
           <TableBody>
-            {dataTable1.map((user, i) => (
+            {dataTable.map((user, i) => (
               <TableRow key={i}>
                 <TableCell>
                   <div className="flex items-center text-sm">
-                    {/*<Avatar className="hidden mr-3 md:block" src={user.avatar} alt="User avatar" />*/}
                     <div>
                       <p className="font-semibold">{user.name}</p>
-                      
                     </div>
                   </div>
                 </TableCell>
@@ -105,15 +125,26 @@ function Tables() {
                   <span className="text-sm">₦ {user.amount}</span>
                 </TableCell>
                 <TableCell>
-                  <Badge type={user.status}>{user.label}</Badge>
+                  <Badge
+                    type={user.status}
+                    style={{ backgroundColor: user.label === 'unpaid' ? '#f28d6f' : undefined }}
+                  >
+                    {user.label}
+                  </Badge>
                 </TableCell>
                 <TableCell>
                   <span className="text-sm">{new Date(user.date).toLocaleDateString()}</span>
+                </TableCell>
+                <TableCell>
+                  <Button layout="link" size="icon" aria-label="Edit" onClick={() => handleEditClick(user)}>
+                    <EditIcon className="w-5 h-5" aria-hidden="true" />
+                  </Button>
                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
+
         <TableFooter>
           <Pagination
             totalResults={totalResults}
@@ -121,163 +152,48 @@ function Tables() {
             onChange={onPageChangeTable1}
             label="Table navigation"
           />
-          <Button 
-          style={{
-            marginTop:'10px',
-          backgroundColor:'#41aa5e'
-          }}
-           tag="a" href="dashboard" 
-         
-          > Download List </Button>
-        </TableFooter>
-      </TableContainer>
-
-      <SectionTitle>Paid Students</SectionTitle>
-      <TableContainer className="mb-8">
-        <Table>
-          <TableHeader>
-            <tr>
-              <TableCell>Name</TableCell>
-              <TableCell>Mat No.</TableCell>
-              <TableCell>Type</TableCell>
-              <TableCell>Amount</TableCell>
-              <TableCell>Status</TableCell>
-              <TableCell>Date</TableCell>
-              
-            </tr>
-          </TableHeader>
-          <TableBody>
-            {dataTable2.map((user, i) => (
-              <TableRow key={i}>
-                <TableCell>
-                  <div className="flex items-center text-sm">
-                    {/*<Avatar className="hidden mr-3 md:block" src={user.avatar} alt="User avatar" />*/}
-                    <div>
-                      <p className="font-semibold">{user.name}</p>
-                      
-                    </div>
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <span className="text-sm">{user.matno}</span>
-                </TableCell>
-                <TableCell>
-                  <span className="text-sm">{user.type}</span>
-                </TableCell>
-                <TableCell>
-                  <span className="text-sm">₦ {user.amount}</span>
-                </TableCell>
-                <TableCell>
-                  <Badge type={user.status}>{user.label}</Badge>
-                </TableCell>
-                <TableCell>
-                  <span className="text-sm">{new Date(user.date).toLocaleDateString()}</span>
-                </TableCell>
-                <TableCell>
-                  <div className="flex items-center space-x-4">
-                    <Button layout="link" size="icon" aria-label="Edit">
-                      <EditIcon className="w-5 h-5" aria-hidden="true" />
-                    </Button>
-                  </div>
-                </TableCell>
-                    {/*<Button layout="link" size="icon" aria-label="Delete">
-                      <TrashIcon className="w-5 h-5" aria-hidden="true" />
-                    </Button>
-                  </div>
-            </TableCell>*/}
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-        <TableFooter>
-          <Pagination
-            totalResults={totalResults}
-            resultsPerPage={resultsPerPage}
-            onChange={onPageChangeTable2}
-            label="Table navigation"
-          />
           <Button
-          style={{
-            marginTop:'10px',
-          backgroundColor:'#41aa5e'
-          }}
-           tag="a" href="dashboard"> Download List </Button>
+            style={{
+              marginTop: '10px',
+              backgroundColor: '#41aa5e',
+            }}
+            tag="a"
+            href="dashboard"
+          >
+            Download List
+          </Button>
         </TableFooter>
       </TableContainer>
 
-
-      <SectionTitle>Not Paid Students</SectionTitle>
-      <TableContainer className="mb-8">
-        <Table>
-          <TableHeader>
-            <tr>
-              <TableCell>Name</TableCell>
-              <TableCell>Mat No.</TableCell>
-              <TableCell>Type</TableCell>
-              <TableCell>Amount</TableCell>
-              <TableCell>Status</TableCell>
-              <TableCell>Date</TableCell>
-              
-            </tr>
-          </TableHeader>
-          <TableBody>
-            {dataTable2.map((user, i) => (
-              <TableRow key={i}>
-                <TableCell>
-                  <div className="flex items-center text-sm">
-                    {/*<Avatar className="hidden mr-3 md:block" src={user.avatar} alt="User avatar" />*/}
-                    <div>
-                      <p className="font-semibold">{user.name}</p>
-                      
-                    </div>
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <span className="text-sm">{user.matno}</span>
-                </TableCell>
-                <TableCell>
-                  <span className="text-sm">{user.type}</span>
-                </TableCell>
-                <TableCell>
-                  <span className="text-sm">₦ {user.amount}</span>
-                </TableCell>
-                <TableCell>
-                  <Badge type={user.status}>{user.label}</Badge>
-                </TableCell>
-                <TableCell>
-                  <span className="text-sm">{new Date(user.date).toLocaleDateString()}</span>
-                </TableCell>
-                <TableCell>
-                  <div className="flex items-center space-x-4">
-                    <Button layout="link" size="icon" aria-label="Edit">
-                      <EditIcon className="w-5 h-5" aria-hidden="true" />
-                    </Button>
-                  </div>
-                </TableCell>
-                    {/*<Button layout="link" size="icon" aria-label="Delete">
-                      <TrashIcon className="w-5 h-5" aria-hidden="true" />
-                    </Button>
-                  </div>
-            </TableCell>*/}
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-        <TableFooter>
-          <Pagination
-            totalResults={totalResults}
-            resultsPerPage={resultsPerPage}
-            onChange={onPageChangeTable2}
-            label="Table navigation"
-          />
-          <Button
-          style={{
-            marginTop:'10px',
-          backgroundColor:'#41aa5e'
-          }}
-           tag="a" href="dashboard"> Download List </Button>
-        </TableFooter>
-      </TableContainer>
+      {isCardVisible && selectedUser && (
+  <div
+    style={{
+      border: '1px solid #ccc',
+      padding: '10px',
+      backgroundColor: '#f9f9f9',
+      marginBottom: '30px',
+      marginTop: '-30px',
+      width: '350px',
+      borderRadius: '8px',
+      marginLeft:'auto'
+    }}
+  >
+    <h3>Information for {selectedUser.name}</h3>
+    <p><strong>Level:</strong> {selectedUser.level}</p>
+    <Button
+      style={{ marginTop: '10px',
+        marginRight:'10px',
+        backgroundColor: '#41aa5e',
+      }}
+      tag="a"
+      href={`tel:${selectedUser.contact}`}
+      layout="primary"
+    >
+      Call {selectedUser.contact}
+    </Button>
+    <Button onClick={closeCard} style={{ marginTop: '10px', backgroundColor: '#41aa5e', }}>Close</Button>
+  </div>
+)}
     </>
   )
 }
