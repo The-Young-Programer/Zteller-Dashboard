@@ -72,6 +72,7 @@ function Cards() {
         <Card>
           <CardBody>
             <img 
+            alt='paystack'
             style={{
               maxHeight:"20px",
               
