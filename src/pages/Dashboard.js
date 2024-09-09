@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFilter } from '@fortawesome/free-solid-svg-icons';
-import GetStartedPopup from '../components/GetStartedPopup';
+// import GetStartedPopup from '../components/GetStartedPopup';
 
 import CTA from '../components/CTA';
 import InfoCard from '../components/Cards/InfoCard';
@@ -37,7 +37,7 @@ function Dashboard() {
   const [page, setPage] = useState(1);
   const [data, setData] = useState([]);
   const [filter, setFilter] = useState('paid');
-  const [isRegistrationComplete, setRegistrationComplete] = useState(false);
+  // const [isRegistrationComplete, setRegistrationComplete] = useState(false);
 
   // Pagination setup
   const resultsPerPage = 10;
@@ -68,11 +68,11 @@ function Dashboard() {
 
   return (
     <>
-      {!isRegistrationComplete && (
-        <GetStartedPopup onComplete={() => setRegistrationComplete(true)} />
-      )}
+      // {!isRegistrationComplete && (
+      //   <GetStartedPopup onComplete={() => setRegistrationComplete(true)} />
+      // )}
 
-      {isRegistrationComplete && (
+      // {isRegistrationComplete && (
         <>
           <PageTitle>Dashboard</PageTitle>
           <CTA />
@@ -206,7 +206,7 @@ function Dashboard() {
             </ChartCard>
           </div>
         </>
-      )}
+      // )}
     </>
   );
 }

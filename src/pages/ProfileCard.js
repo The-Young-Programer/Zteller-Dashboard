@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FiCamera } from 'react-icons/fi';
 import ztellerImage from '../assets/img/zteller.png';
+import logo from './Ztellalogo.png'
 
 const ProfileCard = () => {
   const [profileImage, setProfileImage] = useState(() => {
@@ -88,7 +89,16 @@ const ProfileCard = () => {
         </div>
 
         <a href="https://zteller.com" className="mt-6 inline-block px-4 py-2 bg-transparent text-green-600 rounded hover:bg-transparent transition duration-200">
-          Powered by Zteller
+         <div style={{
+     
+    display:'flex',
+    
+   }}> Powered by <img src={logo} alt='logo'  style={{
+     
+      width: '60px',
+     
+    }}/>
+    </div>
         </a>
       </div>
     </div>
