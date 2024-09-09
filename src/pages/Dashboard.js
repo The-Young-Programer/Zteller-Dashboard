@@ -68,11 +68,11 @@ function Dashboard() {
 
   return (
     <>
-      // {!isRegistrationComplete && (
+       {/* {!isRegistrationComplete && (
       //   <GetStartedPopup onComplete={() => setRegistrationComplete(true)} />
       // )}
 
-      // {isRegistrationComplete && (
+      // {isRegistrationComplete && ( */}
         <>
           <PageTitle>Dashboard</PageTitle>
           <CTA />
@@ -206,7 +206,7 @@ function Dashboard() {
             </ChartCard>
           </div>
         </>
-      // )}
+      {/* )} */}
     </>
   );
 }
