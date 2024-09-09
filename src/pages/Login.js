@@ -1,14 +1,21 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom'; // Import useHistory
 
 import ImageMobile from '../assets/img/Ztellalogo.png';
 import ImageDesktop from '../assets/img/favicon.png';
 import { GoogleIcon, FacebookIcon } from '../icons';
 import { Label, Input, Button } from '@windmill/react-ui';
 
+
 function Login() {
   const [isHoveredForgotPassword, setIsHoveredForgotPassword] = useState(false);
   const [isHoveredCreateAccount, setIsHoveredCreateAccount] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+
+  const history = useHistory(); // Initialize useHistory
 
   const handleMouseEnterForgotPassword = () => {
     setIsHoveredForgotPassword(true);
@@ -24,6 +31,19 @@ function Login() {
 
   const handleMouseLeaveCreateAccount = () => {
     setIsHoveredCreateAccount(false);
+  };
+
+  const handleLogin = () => {
+    if (!email || !password) {
+      setError('Please fill in all fields.');
+    } else {
+      // Clear error and proceed with login
+      setError('');
+      // Add your login logic here, e.g., navigating to another page
+
+      // On successful login, redirect to the /app page
+      history.push('/app');
+    }
   };
 
   return (
@@ -47,14 +67,27 @@ function Login() {
           <main className="flex items-center justify-center p-6 sm:p-12 md:w-1/2">
             <div className="w-full">
               <h1 className="mb-4 text-xl font-semibold text-gray-700 dark:text-gray-200">Login</h1>
+              {error && <p className="mb-4 text-red-500">{error}</p>}
               <Label>
                 <span>Email</span>
-                <Input className="mt-1" type="email" placeholder="john@doe.com" />
+                <Input
+                  className="mt-1"
+                  type="email"
+                  placeholder="nemo@zteller.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
               </Label>
 
               <Label className="mt-4">
                 <span>Password</span>
-                <Input className="mt-1" type="password" placeholder="***************" />
+                <Input
+                  className="mt-1"
+                  type="password"
+                  placeholder="***************"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
               </Label>
 
               <Button
@@ -65,9 +98,10 @@ function Login() {
                 }}
                 onMouseEnter={(e) => e.target.style.backgroundColor = '#16a34a'} // Darker green on hover
                 onMouseLeave={(e) => e.target.style.backgroundColor = '#41aa5e'} // Original green
+                onClick={handleLogin}
                 block
-                tag={Link}
-                to="/app"
+                // tag={Link}
+                // to="/app"
               >
                 Log in
               </Button>
