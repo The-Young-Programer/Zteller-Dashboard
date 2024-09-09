@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom'; 
 
 import ImageMobile from '../assets/img/Ztellalogo.png';
 import ImageDesktop from '../assets/img/favicon.png';
@@ -9,6 +9,12 @@ import { Input, Label, Button } from '@windmill/react-ui';
 function CreateAccount() {
   const [isHoveredLogin, setIsHoveredLogin] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [error, setError] = useState('');
+
+  const history = useHistory();
 
   const handleMouseEnterLogin = () => {
     setIsHoveredLogin(true);
@@ -20,6 +26,23 @@ function CreateAccount() {
 
   const handleCheckboxChange = () => {
     setIsChecked(!isChecked);
+  };
+
+  const handleCreateAccount = () => {
+    if (!email || !password || !confirmPassword) {
+      setError('Please fill in all fields.');
+    } else if (password !== confirmPassword) {
+      setError('Passwords do not match.');
+    } else if (!isChecked) {
+      setError('You must agree to the privacy policy.');
+    } else {
+      // Clear error and proceed with account creation
+      setError('');
+      // Add your account creation logic here, e.g., an API call to create a new account
+
+      // On successful account creation, redirect to the /login page
+      history.push('/login');
+    }
   };
 
   return (
@@ -45,17 +68,36 @@ function CreateAccount() {
               <h1 className="mb-4 text-xl font-semibold text-gray-700 dark:text-gray-200">
                 Create account
               </h1>
+              {error && <p className="mb-4 text-red-500">{error}</p>}
               <Label>
                 <span>Email</span>
-                <Input className="mt-1" type="email" placeholder="john@doe.com" />
+                <Input
+                  className="mt-1"
+                  type="email"
+                  placeholder="nemo@zteller.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
               </Label>
               <Label className="mt-4">
                 <span>Password</span>
-                <Input className="mt-1" placeholder="***************" type="password" />
+                <Input
+                  className="mt-1"
+                  placeholder="***************"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
               </Label>
               <Label className="mt-4">
                 <span>Confirm password</span>
-                <Input className="mt-1" placeholder="***************" type="password" />
+                <Input
+                  className="mt-1"
+                  placeholder="***************"
+                  type="password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                />
               </Label>
 
               <Label className="mt-6 relative" check>
@@ -82,9 +124,6 @@ function CreateAccount() {
               </Label>
 
               <Button
-                tag={Link}
-                to="/login"
-                block
                 className="mt-4"
                 style={{
                   backgroundColor: '#41aa5e', // Custom green color
@@ -92,6 +131,8 @@ function CreateAccount() {
                 }}
                 onMouseEnter={(e) => e.target.style.backgroundColor = '#16a34a'} // Darker green on hover
                 onMouseLeave={(e) => e.target.style.backgroundColor = '#41aa5e'} // Original green
+                onClick={handleCreateAccount}
+                block
               >
                 Create account
               </Button>
